@@ -1,0 +1,13 @@
+{
+ "version": 1,
+ "description": "A description of the module",
+ "code" : "package pyxyztest4 /overwrite=yes;\n        method pypub(varchar(32767) inStr, in_out varchar outStr);\n            dcl package logger logr('App.tk.MAS');\n            dcl package pymas py;\n            dcl int rc;\n            dcl int revision;\n            dcl varchar(32767) character set utf8 pypgm;\n            \n            /* Publish Python module (successful if revision >= 1) */\n            py = _new_ pymas();\n            /* rc = py.appendSrcLine('import numpy as np'); */ \n rc = py.appendSrcLine('def xyz(inString):'); \n            if rc then do;\n                logr.log('E', 'Error: Python publishing failed.');\n                return;\n            end;\n            rc = py.appendSrcLine('   ''Output: outString''');\n            if rc then do;\n                logr.log('E', 'Error: Python publishing failed.');\n                return;\n            end;\n 
+ rc = py.appendSrcLine('   with open (\"file.txt\",\"r\") as myfile:');\n
+ rc = py.appendSrcLine('      data=myfile.read();\n
+ rc = py.appendSrcLine('   return inString+\"->\"+data');\n            
+ if rc then do;\n                logr.log('E', 'Error: Python publishing failed.');\n                return;\n            end;\n            pypgm = py.getSource();\n            logr.log( 'i', 'pypgm = $s', pypgm );\n\n            revision = py.publish(pypgm, 'xyz_module_name');\n            if (revision < 1) then do;\n                logr.log('E', 'Error: Python publishing failed.');\n                return;\n            end;\n            \n            /* Specify method to execute */\n            rc = py.useMethod('xyz');\n            if rc then do;\n                logr.log('E', 'Error: Python function not found.');\n                return;\n            end;\n            \n            /* Set input values */\n            py.setString('inString', inStr);\n            \n            /* Execute */\n            rc = py.execute();\n            if rc then do;\n                logr.log('i', 'Error: Execution failed.');\n                return;\n            end;\n            \n            /* Return results */\n            outStr = py.getString('outString');\n            logr.log('i', '## outStr=$s',outStr);\n        end;\n    endpackage;",
+ "scope": "public",
+ "type": "text/application.source.ds2",
+ "properties": [ {"name" : "connectionString", "value" : "connection information"} ]
+}
+
