@@ -8,6 +8,6 @@ MAS can take in SAS DS2 code or Python code. Additionally, SAS Model Manager can
 These files are wrapped in JSON since MAS presents a REST API for publishing and managing models.
 # how do I publish one of these JSON documents to MAS?
 Find your MAS API end point, authenticate, and POST the document:
-<code>
-curl -X POST -d @<input json doc> -H "Content-Type: application/json" http://sasbap.demo.sas.com/SASMicroAnalyticService/rest/modules?ticket=<your ticket>
-</code>
+```
+$ curl -X POST -d @<input json doc> -H "Content-Type: application/json" http://sasbap.demo.sas.com/SASMicroAnalyticService/rest/modules?ticket=<your ticket>
+```
